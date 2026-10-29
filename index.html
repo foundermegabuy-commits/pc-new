@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PC House BD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=Hind+Siliguri:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-page="home">
+<div id="site-header"></div>
+
+<main class="wrap">
+
+  <!-- Bento hero -->
+  <div class="bento">
+    <div class="slider b-slide" id="slider">
+      <div class="slides">
+        <img src="img/b1.webp" alt="">
+        <img src="img/b2.jpg" alt="">
+        <img src="img/b3.jpg" alt="">
+        <img src="img/b4.jpg" alt="">
+      </div>
+      <button class="sl-arrow prev" aria-label="Previous"><i class="fa-solid fa-chevron-left"></i></button>
+      <button class="sl-arrow next" aria-label="Next"><i class="fa-solid fa-chevron-right"></i></button>
+      <div class="dots"></div>
+    </div>
+    <a href="product.html?id=16" class="dod" id="dod"></a>
+    <a href="category.html?c=monitor" class="b-tile t-gold"><small>Up to 25% off</small><h3>Gaming Monitors</h3><span>Shop now <i class="fa-solid fa-arrow-right"></i></span><img src="img/p3.png" alt=""></a>
+    <a href="category.html?c=gaming" class="b-tile"><small>Feel every turn</small><h3>Racing Wheels</h3><span>Shop now <i class="fa-solid fa-arrow-right"></i></span><img src="img/p5.png" alt=""></a>
+    <a href="category.html?c=projector" class="b-tile t-blue"><small>Cinema anywhere</small><h3>Smart Projectors</h3><span>Shop now <i class="fa-solid fa-arrow-right"></i></span><img src="img/p1.png" alt=""></a>
+  </div>
+
+  <!-- Trust strip -->
+  <div class="trust">
+    <a href="policy.html?p=original"><i class="fa-solid fa-certificate"></i><p><b>100% Original</b><span>Official products</span></p></a>
+    <a href="policy.html?p=emi"><i class="fa-solid fa-credit-card"></i><p><b>0% EMI</b><span>Up to 12 months</span></p></a>
+    <a href="policy.html?p=delivery"><i class="fa-solid fa-truck-fast"></i><p><b>Fast Delivery</b><span>All over Bangladesh</span></p></a>
+    <a href="policy.html?p=warranty"><i class="fa-solid fa-shield-halved"></i><p><b>Official Warranty</b><span>Hassle-free claim</span></p></a>
+    <a href="policy.html?p=refund"><i class="fa-solid fa-rotate"></i><p><b>Easy Exchange</b><span>7-day policy</span></p></a>
+    <a href="policy.html?p=payment"><i class="fa-solid fa-lock"></i><p><b>Secure Payment</b><span>bKash, Nagad, Card</span></p></a>
+  </div>
+
+  <!-- Categories: round icon strip -->
+  <section>
+    <div class="shead">
+      <div><h2>Featured Categories</h2><p>Get your desired product from featured category</p></div>
+      <div class="right">
+        <a href="category.html" class="show-all">View All <i class="fa-solid fa-arrow-right"></i></a>
+        <button class="nav-arr" data-row="catgrid" data-dir="-1" aria-label="Left"><i class="fa-solid fa-chevron-left"></i></button>
+        <button class="nav-arr" data-row="catgrid" data-dir="1" aria-label="Right"><i class="fa-solid fa-chevron-right"></i></button>
+      </div>
+    </div>
+    <div class="catstrip" id="catgrid"></div>
+  </section>
+
+  <!-- Deals: spotlight + list -->
+  <section class="deals">
+    <div class="shead">
+      <div><h2>Exclusive Deals</h2><p>Limited-time prices on top picks</p></div>
+      <a href="flash-sale.html" class="show-all">All deals <i class="fa-solid fa-arrow-right"></i></a>
+    </div>
+    <div class="deal-wrap">
+      <div class="spot" id="spot"></div>
+      <div class="dlist" id="dlist"></div>
+    </div>
+  </section>
+
+  <!-- Top selling: ranked list -->
+  <section>
+    <div class="shead">
+      <div><h2>Top Selling</h2><p>Most loved by our customers</p></div>
+      <div class="tabs" id="tabs">
+        <button class="on" data-tab="laptop">Laptops</button>
+        <button data-tab="desktop">Desktop PC</button>
+        <button data-tab="monitor">Monitors</button>
+        <button data-tab="gaming">Gaming</button>
+      </div>
+    </div>
+    <div class="rank" id="g-top"></div>
+  </section>
+
+  <section class="duo">
+    <a href="category.html?c=gaming" class="pbn"><img src="img/bn-gaming.jpg" alt="Gaming Gear – Nintendo, PICO, PS5, Meta" loading="lazy"></a>
+    <a href="category.html?c=tablet" class="pbn"><img src="img/bn-teclast.jpg" alt="Teclast Android Tablet – Authorized Distributor" loading="lazy"></a>
+  </section>
+
+  <!-- New arrival: featured grid -->
+  <section>
+    <div class="shead">
+      <div><h2>New Arrival</h2><p>Fresh tech, just landed</p></div>
+      <a href="category.html" class="show-all">Show All <i class="fa-solid fa-arrow-right"></i></a>
+    </div>
+    <div class="na">
+      <div class="na-stage" id="naStage"></div>
+      <div class="na-list" id="naList"></div>
+    </div>
+  </section>
+
+  <!-- PC Builder: steps -->
+  <section class="builder">
+    <div class="bl">
+      <small>PC BUILDER</small>
+      <h2>Build your <em>dream PC</em> in four steps.</h2>
+      <p>Pick each part, we check compatibility, assemble, stress-test and deliver it ready to play.</p>
+      <div class="btns"><a href="pc-builder.html" class="btn dark">Start Building <i class="fa-solid fa-arrow-right"></i></a><a href="category.html?c=desktop" class="btn ghost">Pre-built PCs</a></div>
+    </div>
+    <ol class="steps4">
+      <li><span>01</span><i class="fa-solid fa-microchip"></i><b>Processor</b><small>Intel &amp; AMD</small></li>
+      <li><span>02</span><i class="fa-solid fa-memory"></i><b>RAM</b><small>DDR4 / DDR5</small></li>
+      <li><span>03</span><i class="fa-solid fa-display"></i><b>Graphics Card</b><small>RTX, Arc, Radeon</small></li>
+      <li><span>04</span><i class="fa-solid fa-hard-drive"></i><b>Storage</b><small>NVMe SSD &amp; HDD</small></li>
+    </ol>
+  </section>
+
+  <!-- Gaming mania: dark band -->
+  <section class="band">
+    <div class="shead">
+      <div><h2>Gaming Mania</h2><p>Gear up for the win</p></div>
+      <div class="right">
+        <a href="category.html?c=gaming" class="show-all">Show All <i class="fa-solid fa-arrow-right"></i></a>
+        <button class="nav-arr" data-row="r-gaming" data-dir="-1" aria-label="Left"><i class="fa-solid fa-chevron-left"></i></button>
+        <button class="nav-arr" data-row="r-gaming" data-dir="1" aria-label="Right"><i class="fa-solid fa-chevron-right"></i></button>
+      </div>
+    </div>
+    <div class="row" id="r-gaming"></div>
+  </section>
+
+  <section class="wide pbn"><a href="category.html?c=tablet"><img src="img/b5.jpg" alt="VEIKK graphics tablets – Available now" loading="lazy"></a></section>
+
+  <section>
+    <div class="shead">
+      <div><h2>Ready-to-Go Desktop PC</h2><p>Tested builds at the best price</p></div>
+      <a href="category.html?c=desktop" class="show-all">Show All <i class="fa-solid fa-arrow-right"></i></a>
+    </div>
+    <div class="grid" id="g-desktop"></div>
+  </section>
+
+  <section id="recentHome" hidden>
+    <div class="shead">
+      <div><h2>Recently Viewed</h2><p>Pick up where you left off</p></div>
+      <div class="right">
+        <button class="nav-arr" data-row="r-recent-home" data-dir="-1" aria-label="Left"><i class="fa-solid fa-chevron-left"></i></button>
+        <button class="nav-arr" data-row="r-recent-home" data-dir="1" aria-label="Right"><i class="fa-solid fa-chevron-right"></i></button>
+      </div>
+    </div>
+    <div class="row" id="r-recent-home"></div>
+  </section>
+
+  <!-- Brands marquee -->
+  <section>
+    <div class="shead"><div><h2>Shop By Brands</h2><p>Official partners</p></div><a href="brands.html" class="show-all">Show All <i class="fa-solid fa-arrow-right"></i></a></div>
+    <div class="marquee"><div class="mq" id="brands"></div></div>
+  </section>
+</main>
+
+<div id="site-footer"></div>
+<script src="assets/app.js"></script>
+<script>
+const off = id => Math.round((P[id].o - P[id].p) / P[id].o * 100);
+
+/* deal of the day tile */
+(() => {
+  const x = P[16];
+  $("#dod").innerHTML = `<small><i class="fa-solid fa-fire"></i>DEAL OF THE DAY</small>
+    <div class="dimg"><img src="img/${x.i}" alt="${esc(x.n)}"></div>
+    <h3>${esc(x.n)}</h3>
+    <div class="pr"><div><b>${tk(x.p)}</b><s>${tk(x.o)}</s></div><span class="go"><i class="fa-solid fa-arrow-right"></i></span></div>`;
+})();
+
+/* categories */
+const CATS = [["fa-microchip","Processor","components"],["fa-server","Motherboard","components"],["fa-hard-drive","SSD","components"],["fa-laptop","Laptops","laptop"],["fa-display","Graphics Card","components"],["fa-computer-mouse","Mouse","accessories"],["fa-keyboard","Keyboard","accessories"],["fa-tv","Monitor","monitor"],["fa-headphones","Headphones","gadget"],["fa-battery-full","Power Bank","gadget"],["fa-clock","Smart Watch","gadget"],["fa-video","Projector","projector"],["fa-camera","Action Camera","cameras"],["fa-wifi","Networking","networking"],["fa-pen-nib","Graphics Tablet","tablet"],["fa-gamepad","Gaming","gaming"]];
+$("#catgrid").innerHTML = CATS.map(([i,n,c])=>`<a href="category.html?c=${c}" class="cat"><div class="ic"><i class="fa-solid ${i}"></i></div><b>${n}</b></a>`).join("");
+
+/* deals: spotlight + compact list */
+const DEALS = [16,4,5,13,3,20,2];
+(() => {
+  const id = DEALS[0], x = P[id];
+  $("#spot").innerHTML = `<div class="sp-top"><span class="sp-badge">-${off(id)}% TODAY</span>
+      <div class="timer">Ends in <span><b id="th">00</b>Hrs</span><span><b id="tm">00</b>Min</span><span><b id="ts">00</b>Sec</span></div></div>
+    <a href="product.html?id=${id}" class="spi"><img src="img/${x.i}" alt="${esc(x.n)}"></a>
+    <span class="brand">${esc(x.b)}</span>
+    <h3><a href="product.html?id=${id}">${esc(x.n)}</a></h3>
+    <div class="sp-price"><b>${tk(x.p)}</b><s>${tk(x.o)}</s><em>Save ${tk(x.o - x.p)}</em></div>
+    <div class="sp-stock"><span style="width:72%"></span></div><small class="sp-sold">72% claimed · hurry, limited stock</small>
+    <div class="sp-btns"><button class="btn primary" onclick="addCart(${id},1,true)"><i class="fa-solid fa-bolt"></i>Buy Now</button><button class="btn ghost" onclick="addCart(${id})"><i class="fa-solid fa-cart-plus"></i>Add to Cart</button><button class="icon-btn" data-wish="${id}" onclick="toggleWish(${id})" aria-label="Wishlist"><i class="fa-regular fa-heart"></i></button></div>`;
+  $("#dlist").innerHTML = DEALS.slice(1).map(k => { const y = P[k]; return `<div class="mcard">
+      <a href="product.html?id=${k}" class="mi"><img src="img/${y.i}" alt="" loading="lazy"><em>-${off(k)}%</em></a>
+      <div class="mt"><span class="brand">${esc(y.b)}</span><a href="product.html?id=${k}">${esc(y.n)}</a>
+        <div class="mp"><b>${tk(y.p)}</b><s>${tk(y.o)}</s></div></div>
+      <button class="cartb" aria-label="Add to cart" onclick="addCart(${k})"><i class="fa-solid fa-cart-plus"></i></button>
+    </div>`; }).join("");
+  markTools();
+})();
+
+/* top selling: ranked */
+const TABS = {laptop:[16,15,17,18],desktop:[11,13,12,14],monitor:[3,4,10,20],gaming:[5,6,8,9]};
+const rankRow = (id, k) => { const x = P[id]; return `<div class="rk">
+    <span class="rk-n">${String(k + 1).padStart(2, "0")}</span>
+    <a href="product.html?id=${id}" class="rk-img"><img src="img/${x.i}" alt="" loading="lazy"></a>
+    <div class="rk-t"><span class="brand">${esc(x.b)}</span><a href="product.html?id=${id}">${esc(x.n)}</a>
+      <div class="rating">${pchStars(pchRate(id))}<span>${pchRate(id).toFixed(1)} · ${pchReviews(id)} reviews</span></div></div>
+    <div class="rk-p"><b>${tk(x.p)}</b>${x.o > x.p ? `<s>${tk(x.o)}</s>` : ""}<div><button class="btn primary" onclick="addCart(${id},1,true)">Buy Now</button><button class="cartb" aria-label="Add to cart" onclick="addCart(${id})"><i class="fa-solid fa-cart-plus"></i></button></div></div>
+  </div>`; };
+const showTop = t => $("#g-top").innerHTML = TABS[t].map(rankRow).join("");
+$("#tabs").addEventListener("click", e => {
+  const b = e.target.closest("button"); if (!b) return;
+  $$("#tabs button").forEach(x => x.classList.toggle("on", x === b));
+  showTop(b.dataset.tab);
+});
+showTop("laptop");
+
+/* new arrival: showcase stage + selectable list */
+(() => {
+  const NEW = [3,1,19,9,6,20];
+  const stage = id => {
+    const x = P[id], st = pchStock(id);
+    $("#naStage").innerHTML = `<span class="na-tag"><i class="fa-solid fa-wand-magic-sparkles"></i>JUST LANDED</span>
+      <a href="product.html?id=${id}" class="na-img"><img src="img/${x.i}" alt="${esc(x.n)}"></a>
+      <div class="na-info">
+        <span class="brand">${esc(x.b)}</span>
+        <h3><a href="product.html?id=${id}">${esc(x.n)}</a></h3>
+        <ul>${keyFeatures(x).slice(0, 3).map(f => `<li><i class="fa-solid fa-check"></i>${esc(f)}</li>`).join("")}</ul>
+        <div class="na-buy">
+          <div class="na-price"><b>${tk(x.p)}</b>${x.o > x.p ? `<s>${tk(x.o)}</s>` : ""}<span class="stock${st.pre ? " pre" : st.low ? " low" : ""}">${st.text}</span></div>
+          <div class="na-btns"><button class="btn dark" onclick="addCart(${id},1,true)">${st.pre ? "Pre-Order" : "Buy Now"}</button><button class="icon-btn" aria-label="Add to cart" onclick="addCart(${id})"><i class="fa-solid fa-cart-plus"></i></button><button class="icon-btn" aria-label="Quick view" onclick="quickView(${id})"><i class="fa-regular fa-eye"></i></button><button class="icon-btn" data-wish="${id}" aria-label="Wishlist" onclick="toggleWish(${id})"><i class="fa-regular fa-heart"></i></button></div>
+        </div>
+      </div>`;
+    $$("#naList .na-item").forEach(b => b.classList.toggle("on", +b.dataset.id === id));
+    markTools();
+  };
+  $("#naList").innerHTML = NEW.map((id, k) => `<button type="button" class="na-item" data-id="${id}">
+      <span class="na-th"><img src="img/${P[id].i}" alt="" loading="lazy"></span>
+      <span class="na-t"><small>${esc(P[id].b)} · ${k ? k * 2 + 1 + " days ago" : "Today"}</small><b>${esc(P[id].n)}</b><em>${tk(P[id].p)}</em></span>
+      <i class="fa-solid fa-chevron-right"></i>
+    </button>`).join("");
+  const pick = e => { const b = e.target.closest(".na-item"); if (b && !b.classList.contains("on")) stage(+b.dataset.id); };
+  $("#naList").addEventListener("click", pick);
+  $("#naList").addEventListener("mouseover", pick);
+  stage(NEW[0]);
+})();
+fill("r-gaming",[5,6,7,8,9,10,4,15]);
+fill("g-desktop",[11,13,12,14],{13:"BEST SELLER"});
+renderRecentHome();
+
+/* brands marquee (list doubled for a seamless loop) */
+const BR = ["ASUS","AMD","intel","Logitech","Xiaomi","AOC","HP","Wanbo","Teclast","MSI","Gigabyte","Arzopa"];
+$("#brands").innerHTML = [...BR, ...BR].map(b => `<a href="category.html?q=${encodeURIComponent(b)}">${b}</a>`).join("");
+
+/* slider */
+(() => {
+  const s = $("#slider"), track = s.querySelector(".slides"), n = track.children.length, dots = s.querySelector(".dots");
+  let i = 0, t;
+  dots.innerHTML = Array.from({length:n}, (_, k) => `<button aria-label="Slide ${k+1}"></button>`).join("");
+  const go = k => { i = (k+n)%n; track.style.transform = `translateX(-${i*100}%)`; [...dots.children].forEach((d,j) => d.classList.toggle("on", j===i)); clearInterval(t); t = setInterval(() => go(i+1), 5000); };
+  dots.addEventListener("click", e => { const k = [...dots.children].indexOf(e.target); if (k >= 0) go(k); });
+  s.querySelector(".prev").onclick = () => go(i-1);
+  s.querySelector(".next").onclick = () => go(i+1);
+  go(0);
+})();
+
+/* countdown to midnight */
+(() => {
+  const pad = v => String(v).padStart(2, "0");
+  const tick = () => { const now = new Date(), end = new Date(now); end.setHours(24,0,0,0); const d = Math.floor((end-now)/1000);
+    $("#th").textContent = pad(Math.floor(d/3600)); $("#tm").textContent = pad(Math.floor(d%3600/60)); $("#ts").textContent = pad(d%60); };
+  tick(); setInterval(tick, 1000);
+})();
+</script>
+</body>
+</html>

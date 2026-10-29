@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shop | PC House BD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=Hind+Siliguri:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<script>document.body.dataset.cat = new URLSearchParams(location.search).get("c") || "";</script>
+<div id="site-header"></div>
+
+<main class="wrap">
+  <nav class="crumb" id="crumb"></nav>
+
+  <div class="page-hero cat-hero" id="hero"></div>
+
+  <div class="chips" id="chips"></div>
+
+  <div class="shop">
+    <!-- Filters -->
+    <aside class="filters" id="filters" aria-label="Product filters">
+      <div class="fhead">
+        <h3><i class="fa-solid fa-sliders"></i>Filters</h3>
+        <div style="display:flex;gap:12px;align-items:center"><a id="resetAll">Reset all</a><button class="fclose" aria-label="Close filters" id="fClose"><i class="fa-solid fa-xmark"></i></button></div>
+      </div>
+      <div class="fscroll">
+        <div class="fsec" id="secCat" style="display:none"><button type="button">Category <i class="fa-solid fa-chevron-down"></i></button><div class="fbody" id="fCats"></div></div>
+        <div class="fsec"><button type="button">Price Range <i class="fa-solid fa-chevron-down"></i></button>
+          <div class="fbody">
+            <div class="range"><div class="track"></div><div class="fillr" id="rFill"></div><input type="range" id="rMin" aria-label="Minimum price"><input type="range" id="rMax" aria-label="Maximum price"></div>
+            <div class="pinputs"><label><span>৳</span><input type="number" id="pMin" inputmode="numeric" aria-label="Min price"></label><em>–</em><label><span>৳</span><input type="number" id="pMax" inputmode="numeric" aria-label="Max price"></label></div>
+          </div>
+        </div>
+        <div class="fsec"><button type="button">Brand <i class="fa-solid fa-chevron-down"></i></button><div class="fbody" id="fBrands"></div></div>
+        <div class="fsec"><button type="button">Availability <i class="fa-solid fa-chevron-down"></i></button>
+          <div class="fbody" id="fAvail">
+            <label class="chk"><input type="checkbox" value="in">In Stock<span class="n" data-av="in"></span></label>
+            <label class="chk"><input type="checkbox" value="pre">Pre-Order<span class="n" data-av="pre"></span></label>
+            <label class="chk"><input type="checkbox" value="sale">On Sale<span class="n" data-av="sale"></span></label>
+          </div>
+        </div>
+        <div class="fsec"><button type="button">Customer Rating <i class="fa-solid fa-chevron-down"></i></button><div class="fbody" id="fRating"></div></div>
+      </div>
+      <div class="fapply"><button class="btn ghost" style="flex:1" id="fReset2">Reset</button><button class="btn primary" style="flex:1.4" id="fApply">Show <span id="fApplyN">0</span> items</button></div>
+    </aside>
+    <div class="f-overlay" id="fOverlay"></div>
+
+    <!-- Results -->
+    <div>
+      <div class="toolbar">
+        <h2 id="resTitle">All Products<small id="resCount"></small></h2>
+        <div class="tright">
+          <button class="fbtn" id="fOpen"><i class="fa-solid fa-sliders"></i>Filters <b id="fCount" hidden>0</b></button>
+          <label class="sortsel"><span>Sort by</span>
+            <select id="sort">
+              <option value="pop">Popularity</option>
+              <option value="asc">Price: Low to High</option>
+              <option value="desc">Price: High to Low</option>
+              <option value="new">Newest</option>
+            </select>
+          </label>
+          <div class="views" role="group" aria-label="View">
+            <button class="on" data-v="grid" aria-label="Grid view"><i class="fa-solid fa-grip"></i></button>
+            <button data-v="list" aria-label="List view"><i class="fa-solid fa-list"></i></button>
+          </div>
+        </div>
+      </div>
+      <div class="active-f" id="activeF"></div>
+      <div class="pgrid" id="results"></div>
+      <div id="emptyBox"></div>
+      <div class="pager" id="pager"></div>
+      <p class="pager-note" id="pagerNote"></p>
+    </div>
+  </div>
+
+  <section class="cat-info box" id="catInfo"></section>
+</main>
+
+<div id="site-footer"></div>
+<script src="assets/app.js"></script>
+<script>
+(() => {
+  /* ---------- Derived data (mock rating / stock) ---------- */
+  const RT = id => [4.8,4.6,5.0,4.7,4.9,4.4,4.8][id % 7];
+  const RC = id => 6 + (id * 37) % 58;
+  const STK = id => id % 9 === 0 ? "pre" : "in";
+  const POP = id => RC(id) * RT(id);
+  const stars = r => Array.from({length:5}, (_, k) => r >= k + 1 ? '<i class="fa-solid fa-star"></i>' : r >= k + .5 ? '<i class="fa-solid fa-star-half-stroke"></i>' : '<i class="fa-regular fa-star"></i>').join("");
+  const ICONS = Object.fromEntries(NAV.map(([k, ic]) => [k, ic]));
+  const catName = k => CATNAMES[k] || (NAV.find(n => n[0] === k) || [])[2] || k;
+
+  function specs(id){
+    const n = P[id].n, out = [];
+    const m = (re) => (n.match(re) || [])[0];
+    const cpu = m(/(Core i\d-\w+|Ryzen \d (PRO )?\w+)/); if (cpu) out.push(cpu.replace(/^Core/, "Intel Core").replace(/^Ryzen/, "AMD Ryzen"));
+    const gpu = m(/(RTX \d+|Arc \w+( \d+GB)?)/); if (gpu) out.push((gpu.startsWith("RTX") ? "NVIDIA GeForce " : "Intel ") + gpu);
+    const sz = m(/\d+(\.\d+)?"/); if (sz) out.push(sz + " display");
+    const hz = m(/\d+Hz/); if (hz) out.push(hz + " refresh rate");
+    const ram = m(/\d+GB DDR\d/); if (ram) out.push(ram + " memory");
+    const lm = m(/\d+ ANSI/); if (lm) out.push(lm + " lumens brightness");
+    if (/Wireless|Tri-mode/.test(n)) out.push("Wireless connectivity");
+    if (/RGB/.test(n)) out.push("Customisable RGB lighting");
+    out.push("Official " + P[id].b + " warranty");
+    return out.slice(0, 4);
+  }
+  function rcard(id){
+    let h = card(id, STK(id) === "pre" ? "PRE-ORDER" : (id >= 17 ? "NEW" : ""));
+    h = h.replace("</h4>",`</h4><ul class="specs">${specs(id).map(s => `<li>${esc(s)}</li>`).join("")}</ul>`);
+    if (STK(id) === "pre") h = h.replace('<div class="stock">In Stock</div>', '<div class="stock pre">Pre-Order</div>').replace(">Buy Now<", ">Pre-Order<");
+    return h;
+  }
+
+  /* ---------- Copy per category ---------- */
+  const SUBS = {
+    desktop:[["Gaming PC","gaming","fa-gamepad"],["Intel PC","intel","fa-microchip"],["AMD PC","amd","fa-microchip"],["Budget PC","budget","fa-piggy-bank"],["White Build","white","fa-palette"]],
+    laptop:[["Gaming Laptop","gaming","fa-gamepad"],["ASUS TUF","tuf","fa-laptop"],["ROG Strix","rog","fa-dragon"],["Core i7","i7","fa-microchip"],["Ryzen","ryzen","fa-microchip"],["RTX Graphics","rtx","fa-display"]],
+    monitor:[["Gaming Monitor","gaming","fa-gamepad"],["Curved","curved","fa-tv"],["Portable","portable","fa-mobile-screen"],["IPS Panel","ips","fa-display"],["2K / QHD","2k","fa-expand"]],
+    accessories:[["Keyboard","keyboard","fa-keyboard"],["Mouse","mouse","fa-computer-mouse"],["Wireless","wireless","fa-wifi"],["Mechanical","mechanical","fa-gears"],["RGB","rgb","fa-lightbulb"]],
+    projector:[["Portable","portable","fa-suitcase"],["Android","android","fa-robot"],["Outdoor","outdoor","fa-tree"],["1080P","1080p","fa-film"]],
+    gaming:[["Racing Wheel","wheel","fa-circle-dot"],["Logitech","logitech","fa-gamepad"]],
+    tablet:[["LTE Tablet","lte","fa-signal"],["IPS Display","ips","fa-display"]]
+  };
+  const DESC = {
+    desktop:"Pre-built, stress-tested desktop PCs for gaming, creating and everyday work.",
+    laptop:"Gaming, business and student laptops from ASUS, HP and more, with official warranty.",
+    monitor:"High refresh gaming, ultrawide and portable monitors for every desk.",
+    components:"Processors, motherboards, graphics cards, RAM, storage and more.",
+    tablet:"Android tablets and creator pen displays for work and play.",
+    accessories:"Mechanical keyboards, gaming mice and essential desk accessories.",
+    gaming:"Racing wheels, controllers and gear to level up your setup.",
+    projector:"Portable and home cinema projectors for big-screen moments anywhere.",
+    "":"Explore the full PC House BD catalogue: desktops, laptops, monitors, gaming gear and more."
+  };
+
+  /* ---------- State ---------- */
+  const cat = qp("c") || "", q = (qp("q") || "").trim();
+  const terms = q.toLowerCase().split(/\s+/).filter(Boolean);
+  const base = Object.keys(P).map(Number).filter(id => {
+    const x = P[id];
+    if (cat && x.c !== cat) return false;
+    const hay = (x.n + " " + x.b + " " + catName(x.c)).toLowerCase();
+    return terms.every(t => hay.includes(t));
+  });
+  const prices = base.map(id => P[id].p);
+  const LO = prices.length ? Math.floor(Math.min(...prices) / 500) * 500 : 0;
+  const HI = prices.length ? Math.ceil(Math.max(...prices) / 500) * 500 : 200000;
+  const PER = 9;
+  const S = { brands:new Set(), avail:new Set(), rating:0, min:LO, max:HI, sub:"", sort:"pop", view:"grid", page:1 };
+  try { S.view = localStorage.getItem("pch_view") === "list" ? "list" : "grid"; } catch {}
+
+  const matches = (id, skip) => {
+    const x = P[id];
+    if (skip !== "price" && (x.p < S.min || x.p > S.max)) return false;
+    if (skip !== "brand" && S.brands.size && !S.brands.has(x.b)) return false;
+    if (skip !== "avail" && S.avail.size && ![...S.avail].some(a => a === "sale" ? x.o > x.p : STK(id) === a)) return false;
+    if (skip !== "rating" && RT(id) < S.rating) return false;
+    if (skip !== "sub" && !subMatch(id, S.sub)) return false;
+    return true;
+  };
+  function subMatch(id, key){
+    if (!key) return true;
+    const x = P[id], n = x.n.toLowerCase();
+    if (key === "gaming" && x.c === "desktop") return /rtx|arc/.test(n);
+    if (key === "wheel") return n.includes("wheel");
+    if (key === "mechanical") return /mechanical|magnetic/.test(n);
+    return n.includes(key);
+  }
+
+  /* ---------- Static parts ---------- */
+  const title = q ? `Search: “${q}”` : cat ? catName(cat) : "All Products";
+  document.title = (q ? `Search results for ${q}` : cat ? catName(cat) : "All Products") + " | PC House BD";
+  $("#crumb").innerHTML = `<a href="index.html"><i class="fa-solid fa-house" style="font-size:11px;opacity:1"></i> Home</a><i class="fa-solid fa-chevron-right"></i>`
+    + (cat ? `<a href="category.html">Shop</a><i class="fa-solid fa-chevron-right"></i><span>${esc(catName(cat))}</span>` : q ? `<a href="category.html">Shop</a><i class="fa-solid fa-chevron-right"></i><span>Search results</span>` : `<span>All Products</span>`);
+
+  const artIds = base.filter(id => /.png$/.test(P[id].i)).slice().sort((a, b) => P[b].p - P[a].p).slice(0, 2);
+  const brandsHere = [...new Set(base.map(id => P[id].b))];
+  $("#hero").innerHTML = `<div class="txt">
+      <span class="eyebrow"><i class="fa-solid ${q ? "fa-magnifying-glass" : ICONS[cat] || "fa-grip"}"></i>${q ? "Search results" : cat ? "Category" : "Shop"}</span>
+      <h1>${esc(title)}</h1>
+      <p>${q ? `We found ${base.length} product${base.length === 1 ? "" : "s"} matching your search${cat ? " in " + esc(catName(cat)) : ""}.` : DESC[cat] || `Browse our latest ${esc(catName(cat))} collection with official warranty.`}</p>
+      <div class="stats"><span><i class="fa-solid fa-box"></i>${base.length} Products</span><span><i class="fa-solid fa-tag"></i>${brandsHere.length} Brands</span><span><i class="fa-solid fa-credit-card"></i>0% EMI Available</span></div>
+    </div>
+    ${artIds.length ? `<div class="art">${artIds.map(id => `<img src="img/${P[id].i}" alt="">`).join("")}</div>` : ""}`;
+
+  // Sub-category chips
+  function renderChips(){
+    let html = "";
+    if (!cat) {
+      const counts = {}; base.forEach(id => counts[P[id].c] = (counts[P[id].c] || 0) + 1);
+      html = `<a class="chip on" href="category.html${q ? "?q=" + encodeURIComponent(q) : ""}"><i class="fa-solid fa-grip"></i>All<small>${base.length}</small></a>`
+        + Object.keys(CATNAMES).filter(k => counts[k]).map(k => `<a class="chip" href="category.html?c=${k}${q ? "&q=" + encodeURIComponent(q) : ""}"><i class="fa-solid ${ICONS[k] || "fa-tag"}"></i>${catName(k)}<small>${counts[k]}</small></a>`).join("");
+    } else {
+      const countSub = key => base.filter(id => matches(id, "sub") && subMatch(id, key)).length;
+      const subs = (SUBS[cat] || []).filter(([, key]) => base.some(id => subMatch(id, key)));
+      html = `<button class="chip ${S.sub ? "" : "on"}" data-sub=""><i class="fa-solid fa-grip"></i>All ${esc(catName(cat))}<small>${countSub("")}</small></button>`
+        + subs.map(([label, key, ic]) => `<button class="chip ${S.sub === key ? "on" : ""}" data-sub="${key}"><i class="fa-solid ${ic}"></i>${label}<small>${countSub(key)}</small></button>`).join("");
+    }
+    $("#chips").innerHTML = html;
+  }
+  $("#chips").addEventListener("click", e => { const b = e.target.closest("[data-sub]"); if (!b) return; S.sub = b.dataset.sub; S.page = 1; update(); });
+
+  // Category list in sidebar
+  const allCounts = {}; Object.values(P).forEach(x => allCounts[x.c] = (allCounts[x.c] || 0) + 1);
+  $("#fCats").innerHTML = `<a class="flink ${cat ? "" : "on"}" href="category.html${q ? "?q=" + encodeURIComponent(q) : ""}">All Products <span>${Object.keys(P).length}</span></a>`
+    + Object.keys(CATNAMES).map(k => `<a class="flink ${k === cat ? "on" : ""}" href="category.html?c=${k}${q ? "&q=" + encodeURIComponent(q) : ""}">${CATNAMES[k]} <span>${allCounts[k] || 0}</span></a>`).join("");
+
+  // Brands
+  $("#fBrands").innerHTML = brandsHere.sort().map(b => `<label class="chk"><input type="checkbox" value="${esc(b)}">${esc(b)}<span class="n" data-br="${esc(b)}"></span></label>`).join("") || `<p style="font-size:12.5px;color:var(--muted)">No brands</p>`;
+  // Rating
+  $("#fRating").innerHTML = [0, 4.5, 4].map(r => `<label class="chk"><input type="radio" name="rt" value="${r}" ${r === 0 ? "checked" : ""}>${r ? `<span class="stars">${stars(r)}</span>&amp; up` : "Any rating"}<span class="n" data-rt="${r}"></span></label>`).join("");
+
+  // Collapsible sections
+  $$(".fsec>button").forEach(b => b.addEventListener("click", () => b.parentElement.classList.toggle("closed")));
+
+  /* ---------- Price slider ---------- */
+  const rMin = $("#rMin"), rMax = $("#rMax"), pMin = $("#pMin"), pMax = $("#pMax");
+  [rMin, rMax].forEach(r => { r.min = LO; r.max = HI; r.step = 500; });
+  [pMin, pMax].forEach(p => { p.min = LO; p.max = HI; });
+  function syncPrice(){
+    rMin.value = S.min; rMax.value = S.max; pMin.value = S.min; pMax.value = S.max;
+    const span = HI - LO || 1;
+    $("#rFill").style.left = ((S.min - LO) / span * 100) + "%";
+    $("#rFill").style.right = (100 - (S.max - LO) / span * 100) + "%";
+  }
+  let t;
+  const later = () => { clearTimeout(t); t = setTimeout(() => { S.page = 1; update(); }, 120); };
+  rMin.addEventListener("input", () => { S.min = Math.min(+rMin.value, S.max); syncPrice(); later(); });
+  rMax.addEventListener("input", () => { S.max = Math.max(+rMax.value, S.min); syncPrice(); later(); });
+  pMin.addEventListener("change", () => { S.min = Math.max(LO, Math.min(+pMin.value || LO, S.max)); syncPrice(); S.page = 1; update(); });
+  pMax.addEventListener("change", () => { S.max = Math.min(HI, Math.max(+pMax.value || HI, S.min)); syncPrice(); S.page = 1; update(); });
+
+  $("#fBrands").addEventListener("change", e => { e.target.checked ? S.brands.add(e.target.value) : S.brands.delete(e.target.value); S.page = 1; update(); });
+  $("#fAvail").addEventListener("change", e => { e.target.checked ? S.avail.add(e.target.value) : S.avail.delete(e.target.value); S.page = 1; update(); });
+  $("#fRating").addEventListener("change", e => { S.rating = +e.target.value; S.page = 1; update(); });
+  $("#sort").addEventListener("change", e => { S.sort = e.target.value; S.page = 1; update(); });
+  $$(".views button").forEach(b => b.addEventListener("click", () => { S.view = b.dataset.v; try { localStorage.setItem("pch_view", S.view); } catch {} update(); }));
+
+  function reset(){
+    S.brands.clear(); S.avail.clear(); S.rating = 0; S.min = LO; S.max = HI; S.sub = ""; S.page = 1;
+    $$("#filters input[type=checkbox]").forEach(i => i.checked = false);
+    $$("#fRating input").forEach(i => i.checked = +i.value === 0);
+    syncPrice(); update();
+  }
+  window.resetFilters = reset;
+  $("#resetAll").onclick = reset; $("#fReset2").onclick = reset;
+
+  // Drawer
+  const openF = v => { $("#filters").classList.toggle("open", v); $("#fOverlay").classList.toggle("open", v); document.body.style.overflow = v ? "hidden" : ""; };
+  $("#fOpen").onclick = () => openF(true);
+  $("#fClose").onclick = $("#fOverlay").onclick = $("#fApply").onclick = () => openF(false);
+  matchMedia("(min-width:993px)").addEventListener("change", e => e.matches && openF(false));
+
+  /* ---------- Render ---------- */
+  function update(){
+    const list = base.filter(id => matches(id));
+    const sorters = { pop:(a, b) => POP(b) - POP(a), asc:(a, b) => P[a].p - P[b].p, desc:(a, b) => P[b].p - P[a].p, new:(a, b) => b - a };
+    list.sort(sorters[S.sort]);
+
+    // counts in sidebar (faceted)
+    $$("[data-br]").forEach(s => s.textContent = base.filter(id => P[id].b === s.dataset.br && matches(id, "brand")).length);
+    $$("[data-av]").forEach(s => { const a = s.dataset.av; s.textContent = base.filter(id => (a === "sale" ? P[id].o > P[id].p : STK(id) === a) && matches(id, "avail")).length; });
+    $$("[data-rt]").forEach(s => s.textContent = base.filter(id => RT(id) >= +s.dataset.rt && matches(id, "rating")).length);
+
+    const pages = Math.max(1, Math.ceil(list.length / PER));
+    S.page = Math.min(S.page, pages);
+    const from = (S.page - 1) * PER, slice = list.slice(from, from + PER);
+
+    $("#resTitle").innerHTML = `${esc(title)}<small id="resCount">${list.length ? `Showing ${from + 1}–${from + slice.length} of ${list.length} result${list.length === 1 ? "" : "s"}` : "No results"}</small>`;
+    $("#fApplyN").textContent = list.length;
+
+    const res = $("#results");
+    res.classList.toggle("lv", S.view === "list");
+    $$(".views button").forEach(b => b.classList.toggle("on", b.dataset.v === S.view));
+    res.innerHTML = slice.map(rcard).join("");
+    markTools();
+
+    $("#emptyBox").innerHTML = list.length ? "" : `<div class="empty box"><i class="fa-solid fa-box-open"></i><h3>No products found</h3><p>${q && !base.length ? `We couldn't find anything for “${esc(q)}”. Try a different keyword or browse all products.` : "Try adjusting or clearing your filters to see more products."}</p>${base.length ? `<button class="btn primary" onclick="resetFilters()"><i class="fa-solid fa-rotate-left"></i>Clear all filters</button>` : `<a class="btn primary" href="category.html"><i class="fa-solid fa-grip"></i>Browse all products</a>`}</div>`;
+
+    // Active filters
+    const chips = [];
+    if (S.sub) chips.push([(SUBS[cat] || []).find(s => s[1] === S.sub)?.[0] || S.sub, () => { S.sub = ""; }]);
+    S.brands.forEach(b => chips.push([b, () => { S.brands.delete(b); $$("#fBrands input").forEach(i => { if (i.value === b) i.checked = false; }); }]));
+    S.avail.forEach(a => chips.push([{in:"In Stock", pre:"Pre-Order", sale:"On Sale"}[a], () => { S.avail.delete(a); $$("#fAvail input").forEach(i => { if (i.value === a) i.checked = false; }); }]));
+    if (S.rating) chips.push([S.rating + "★ & up", () => { S.rating = 0; $$("#fRating input").forEach(i => i.checked = +i.value === 0); }]);
+    if (S.min > LO || S.max < HI) chips.push([`${tk(S.min)} – ${tk(S.max)}`, () => { S.min = LO; S.max = HI; syncPrice(); }]);
+    const af = $("#activeF");
+    af.innerHTML = chips.map(([l], k) => `<span>${esc(l)}<button data-k="${k}" aria-label="Remove filter"><i class="fa-solid fa-xmark"></i></button></span>`).join("") + (chips.length > 1 ? `<button class="clear" onclick="resetFilters()">Clear all</button>` : "");
+    af.onclick = e => { const b = e.target.closest("[data-k]"); if (!b) return; chips[+b.dataset.k][1](); S.page = 1; update(); };
+    const fc = $("#fCount"); fc.hidden = !chips.length; fc.textContent = chips.length;
+
+    // Pagination
+    const pg = $("#pager");
+    if (pages > 1 || list.length) {
+      const nums = Array.from({length:pages}, (_, k) => k + 1);
+      pg.innerHTML = `<button data-p="${S.page - 1}" ${S.page === 1 ? "disabled" : ""} aria-label="Previous page"><i class="fa-solid fa-chevron-left"></i></button>`
+        + nums.map(n => `<button data-p="${n}" class="${n === S.page ? "on" : ""}">${n}</button>`).join("")
+        + `<button data-p="${S.page + 1}" ${S.page === pages ? "disabled" : ""} aria-label="Next page"><i class="fa-solid fa-chevron-right"></i></button>`;
+      $("#pagerNote").textContent = `Page ${S.page} of ${pages}`;
+    } else { pg.innerHTML = ""; $("#pagerNote").textContent = ""; }
+
+    renderChips();
+  }
+  $("#pager").addEventListener("click", e => {
+    const b = e.target.closest("[data-p]"); if (!b || b.disabled) return;
+    S.page = +b.dataset.p; update();
+    window.scrollTo({top: $(".shop").getBoundingClientRect().top + scrollY - 150, behavior:"smooth"});
+  });
+
+  // SEO info
+  const cn = cat ? catName(cat) : "Computer & Tech Products";
+  $("#catInfo").innerHTML = `<h3>Buy ${esc(cn)} at the Best Price in Bangladesh</h3>
+    <p>PC House BD brings you an extensive range of ${esc(cn.toLowerCase())} from trusted brands like ${brandsHere.slice(0, 4).map(esc).join(", ") || "ASUS, HP and Logitech"}. Every product is 100% original and covered by official warranty, with hassle-free claims at our Multiplan Center showroom in Dhaka.</p>
+    <p>Enjoy 0% EMI for up to 12 months on selected cards, pay securely with bKash, Nagad or card, and get fast delivery all over Bangladesh. Need help choosing? Call 09617179141 or visit our store for expert advice.</p>`;
+
+  syncPrice();
+  update();
+})();
+</script>
+</body>
+</html>
